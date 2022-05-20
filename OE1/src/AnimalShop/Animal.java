@@ -22,7 +22,7 @@ public class Animal {
 	
 	public void PrintAnimal() {
 		
-		System.out.println("Bird Breed: " + this.breed);
-		System.out.println("Bird Color: " + this.color);
+		System.out.println("Animal Breed: " + this.breed);
+		System.out.println("Animal Color: " + this.color);
 	}
 }

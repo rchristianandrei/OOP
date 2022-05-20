@@ -6,10 +6,10 @@ public class Main {
 		
 		Animal[] animals = {
 				
-				new Cat("Persian", "White", 2, true),
-				new Cat("Ragdoll", "Brown", 1, false),
-				new Bird("American Pekin", "White", "Pond", "Pointy"),
-				new Bird("Red Factor Canary", "Red", "Native Region", "Short")
+				new Cat("Persian", "White", 2, true, false),
+				new Cat("Ragdoll", "Brown", 1, false, true),
+				new Bird("American Pekin", "White", "Pond", "Pointy", true),
+				new Bird("Red Factor Canary", "Red", "Native Region", "Short", false)
 		};
 		
 		for(Animal animal : animals) {

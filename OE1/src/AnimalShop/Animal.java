@@ -10,16 +10,6 @@ public class Animal {
 		this.color = color;
 	}
 	
-	public String getBreed() {
-		
-		return this.breed;
-	}
-	
-	public String getColor() {
-		
-		return this.color;
-	}
-	
 	public void PrintAnimal() {
 		
 		System.out.println("Animal Breed: " + this.breed);

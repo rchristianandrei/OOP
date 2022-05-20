@@ -11,17 +11,7 @@ public class Cat extends Animal {
 		super(breed, color);
 		this.age = age;
 		this.isFriendly = isFriendly;
-		this.isMale = isMale; 
-	}
-	
-	public int GetAge() {
-		
-		return this.age;
-	}
-	
-	public boolean GetIsFriendly() {
-		
-		return this.isFriendly;
+		this.isMale = isMale;
 	}
 	
 	public void PrintAnimal() {

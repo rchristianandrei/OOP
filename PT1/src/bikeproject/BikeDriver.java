@@ -178,57 +178,59 @@ public class BikeDriver {
 		}while(index < 0 || index >= bikes.size());
 		
 		do {
-			//	Show parts of chosen bike
-			Bike bikeToEdit = bikes.get(index);
-			bikeToEdit.showBikeParts();
-			System.out.println("\t[0] Cancel");
-			
-			//	Edit bike part
 			do {
-				validIndex = true;
-				int part = inputInt("Choose Bike Part to edit: ");
+				//	Show parts of chosen bike
+				Bike bikeToEdit = bikes.get(index);
+				bikeToEdit.showBikeParts();
+				System.out.println("\t[0] Cancel");
 				
-				if(bikeToEdit instanceof RoadBike && validIndex) {
-					if(part < 0 || part > 7) {
-						System.out.println("Out of Range");
-						validIndex = false;
-					}
-					else {
-						if(part >= 0 && part <= 5) {
-							editBikePart(bikeToEdit,part);
+				//	Edit bike part
+				do {
+					validIndex = true;
+					int part = inputInt("Choose Bike Part to edit: ");
+					
+					if(bikeToEdit instanceof RoadBike && validIndex) {
+						if(part < 0 || part > 7) {
+							System.out.println("Out of Range");
+							validIndex = false;
 						}
 						else {
-							editRoadBikePart((RoadBike)bikeToEdit,part);
+							if(part >= 0 && part <= 5) {
+								editBikePart(bikeToEdit,part);
+							}
+							else {
+								editRoadBikePart((RoadBike)bikeToEdit,part);
+							}
 						}
 					}
-				}
-				else if(bikeToEdit instanceof MountainBike && validIndex){
-					if(part < 0 || part > 8) {
-						System.out.println("Out of Range");
-						validIndex = false;
-					}
-					else {
-						if(part >= 0 && part <= 5) {
-							editBikePart(bikeToEdit,part);
+					else if(bikeToEdit instanceof MountainBike && validIndex){
+						if(part < 0 || part > 8) {
+							System.out.println("Out of Range");
+							validIndex = false;
 						}
 						else {
-							editMountainBikePart((MountainBike)bikeToEdit,part);
+							if(part >= 0 && part <= 5) {
+								editBikePart(bikeToEdit,part);
+							}
+							else {
+								editMountainBikePart((MountainBike)bikeToEdit,part);
+							}
 						}
 					}
-				}
-				else if (validIndex) {
-					if(part < 0 || part > 5) {
-						System.out.println("Out of Range");
-						validIndex = false;
+					else if (validIndex) {
+						if(part < 0 || part > 5) {
+							System.out.println("Out of Range");
+							validIndex = false;
+						}
+						else {
+							editBikePart(bikeToEdit,part);
+						}
 					}
-					else {
-						editBikePart(bikeToEdit,part);
-					}
-				}
-			}while(!validIndex);
-		}while(index != 0);
-		
-		System.out.println("Done Replacing Parts");
+				}while(!validIndex);
+			}while(index != 0);
+			System.out.println("Done Replacing Parts");
+			System.out.println("\nEdit this bike again? {y/n}");
+		}while(in.nextLine().toLowerCase().equals("y"));
 	}
 	
 	private static void editBikePart(Bike bike, int index) {

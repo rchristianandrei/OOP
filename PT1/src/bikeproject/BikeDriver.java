@@ -112,65 +112,15 @@ public class BikeDriver {
 		System.out.println("Enter Seat Type: ");
 		String seatType = in.nextLine();
 		
-		int numGears = 0;
-		boolean validInput;
-		do {
-			validInput = true;
-			try {
-				System.out.println("Enter No. of Gears: ");
-				numGears = in.nextInt();
-			}
-			catch(Exception e) {
-				System.out.println("\nInvalid Input\n");
-				validInput = false;
-			}
-			finally {
-				in.nextLine();
-			}
-			
-		}while(!validInput);
+		int numGears = inputInt("Enter No. of Gears: ");
 		
 		return new Bike(handleBars, frame, tyres, seatType, numGears);
 	}
 	
 	private static RoadBike createRoadBike(Bike temp) {
 		
-		boolean validInput;
-		
-		int tyreWidth = 0;
-		do {
-			validInput = true;
-			try {
-				System.out.println("Enter Tyre Width: ");
-				tyreWidth = in.nextInt();
-			}
-			catch(Exception e) {
-				System.out.println("\nInvalid Input");
-				validInput = false;
-			}
-			finally {
-				in.nextLine();
-			}
-			
-		}while(!validInput);
-		
-		
-		int postHeight = 0;
-		do {
-			validInput = true;
-			try {
-				System.out.println("Enter Post Height: ");
-				postHeight = in.nextInt();
-			}
-			catch(Exception e) {
-				System.out.println("Invalid Input");
-				validInput = false;
-			}
-			finally {
-				in.nextLine();
-			}
-			
-		}while(!validInput);
+		int tyreWidth = inputInt("Enter Tyre Width: ");
+		int postHeight = inputInt("Enter Post Height: ");
 		
 		return new RoadBike(temp, tyreWidth, postHeight);
 	}
@@ -183,23 +133,7 @@ public class BikeDriver {
 		System.out.println("Enter type: ");
 		String type = in.nextLine();
 		
-		int frameSize = 0;
-		boolean validInput;
-		do {
-			validInput = true;
-			try {
-				System.out.println("Enter Frame size: ");
-				frameSize = in.nextInt();
-			}
-			catch(Exception e) {
-				System.out.println("\nInvalid Input\n");
-				validInput = false;
-			}
-			finally {
-				in.nextLine();
-			}
-			
-		}while(!validInput);
+		int frameSize = inputInt("Enter Frame size: ");
 		
 		return new MountainBike(temp, suspension, type, frameSize);
 	}
@@ -240,71 +174,156 @@ public class BikeDriver {
 		
 		//	Choose Bike to edit
 		do {
-			validIndex = true;
-			try {
-				System.out.print("Enter Bike to edit: ");
-				index = in.nextInt();
-			}
-			catch(Exception e) {
-				System.out.println("Invalid Index");
-				validIndex = false;
-			}
-			finally {
-				in.nextLine();
-				if(index < 0 || index >= bikes.size()) {
-					System.out.println("Out of Range Index");
-					validIndex = false;
-				}
-			}
-		}while(!validIndex);
+			index = inputInt("Enter Bike to edit: ");
+		}while(index < 0 || index >= bikes.size());
 		
 		do {
 			//	Show parts of chosen bike
 			Bike bikeToEdit = bikes.get(index);
 			bikeToEdit.showBikeParts();
+			System.out.println("\t[0] Cancel");
 			
 			//	Edit bike part
 			do {
 				validIndex = true;
-				try {
-					index = in.nextInt();
-				}
-				catch(Exception e) {
-					System.out.println("Invalid Input");
-					validIndex = false;
-				}
+				int part = inputInt("Choose Bike Part to edit: ");
 				
-//				if(bikeToEdit instanceof RoadBike && validIndex) {
-//					if(index < 0 || index > 7) {
-//						System.out.println("Out of Range");
-//						validIndex = false;
-//					}
-//					else {
-//						
-//					}
-//				}
-//				else if(bikeToEdit instanceof MountainBike && validIndex){
-//					if(index < 0 || index > 8) {
-//						System.out.println("Out of Range");
-//						validIndex = false;
-//					}
-//					else {
-//						
-//					}
-//				}
-//				else if (validIndex) {
-//					if(index < 0 || index > 5) {
-//						System.out.println("Out of Range");
-//						validIndex = false;
-//					}
-//					else {
-//						
-//					}
-//				}
+				if(bikeToEdit instanceof RoadBike && validIndex) {
+					if(part < 0 || part > 7) {
+						System.out.println("Out of Range");
+						validIndex = false;
+					}
+					else {
+						if(part >= 0 && part <= 5) {
+							editBikePart(bikeToEdit,part);
+						}
+						else {
+							editRoadBikePart((RoadBike)bikeToEdit,part);
+						}
+					}
+				}
+				else if(bikeToEdit instanceof MountainBike && validIndex){
+					if(part < 0 || part > 8) {
+						System.out.println("Out of Range");
+						validIndex = false;
+					}
+					else {
+						if(part >= 0 && part <= 5) {
+							editBikePart(bikeToEdit,part);
+						}
+						else {
+							editMountainBikePart((MountainBike)bikeToEdit,part);
+						}
+					}
+				}
+				else if (validIndex) {
+					if(part < 0 || part > 5) {
+						System.out.println("Out of Range");
+						validIndex = false;
+					}
+					else {
+						editBikePart(bikeToEdit,part);
+					}
+				}
 			}while(!validIndex);
 		}while(index != 0);
 		
 		System.out.println("Done Replacing Parts");
 	}
 	
+	private static void editBikePart(Bike bike, int index) {
+		switch(index) {
+			case 1:
+				System.out.println("Enter new Handle Bars: ");
+				bike.setHandleBars(in.nextLine());
+				break;
+			case 2:
+				System.out.println("Enter new Frame: ");
+				bike.setFrame(in.nextLine());
+				break;
+			case 3:
+				System.out.println("Enter new Tyres: ");
+				bike.setTyres(in.nextLine());
+				break;
+			case 4:
+				System.out.println("Enter new Seat Type: ");
+				bike.setSeatType(in.nextLine());
+				break;
+			case 5:
+				System.out.println();
+				bike.setNumGears(inputInt("Enter new No. of Gears: "));
+				break;
+		}
+	}
+	
+	private static void editRoadBikePart(RoadBike bike, int index) {
+		
+		switch(index) {
+			case 6:
+				bike.setTyreWidth(inputInt("Enter new Tyre Width: "));
+				break;
+			case 7:
+				bike.setPostHeight(inputInt("Enter new Post Height: "));
+				break;
+		}
+	}
+
+	private static void editMountainBikePart(MountainBike bike, int index) {
+		
+		switch(index) {
+			case 6:
+				System.out.println("Enter new Suspension: ");
+				bike.setSuspension(in.nextLine());
+				break;
+			case 7:
+				System.out.println("Enter new Type: ");
+				bike.setType(in.nextLine());
+			case 8:
+				bike.setFrameSize(inputInt("Enter new Frame Size: "));
+				break;
+		}
+	}
+	
+	private static int inputInt(String prompt) {
+		
+		boolean validInput = true;
+		int value = 0;
+		do {
+			validInput = true;
+			try {
+				System.out.println(prompt);
+				value = in.nextInt();
+			}
+			catch(Exception e) {
+				System.out.println("Invalid Input");
+				validInput = false;
+			}
+			finally {
+				in.nextLine();
+			}
+		}while(!validInput);
+		
+		return value;
+	}
+	
+	private static int inputInt() {
+		
+		boolean validInput = true;
+		int value = 0;
+		do {
+			validInput = true;
+			try {
+				value = in.nextInt();
+			}
+			catch(Exception e) {
+				System.out.println("Invalid Input");
+				validInput = false;
+			}
+			finally {
+				in.nextLine();
+			}
+		}while(!validInput);
+		
+		return value;
+	}
 }

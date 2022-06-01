@@ -41,6 +41,10 @@ public class Bike implements BikeParts{
 		return this.frame;
 	}
 	
+	public void setFrame(String newValue) {
+		this.frame = newValue;
+	}
+	
 	@Override
 	public String getTyres() {
 		return this.tyres;
@@ -63,6 +67,10 @@ public class Bike implements BikeParts{
 	
 	public int getNumGears() {
 		return this.NumGears;
+	}
+	
+	public void setNumGears(int newValue) {
+		this.NumGears = newValue;
 	}
 	
 	public void showBikeParts() {

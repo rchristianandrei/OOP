@@ -52,6 +52,10 @@ public final class MountainBike extends Bike implements MountainParts{
 		this.type = newValue;
 	}//end method setType
 	
+	public void setFrameSize(int newValue) {
+		this.frameSize = newValue;
+	}
+	
 	public void showBikeParts() {
 		super.showBikeParts();
 		System.out.println("\t[6] Suspension - "+this.suspension);

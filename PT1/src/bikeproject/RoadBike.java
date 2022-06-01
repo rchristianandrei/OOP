@@ -41,7 +41,7 @@ public final class RoadBike extends Bike implements RoadParts{
 	public void setTyreWidth(int newValue) {
 		this.tyreWidth = newValue;
 	}//end method 
-
+	
 	@Override
 	public int getPostHeight() {
 		return this.postHeight;

@@ -20,6 +20,12 @@ public final class RoadBike extends Bike implements RoadParts{
 		this.postHeight = postHeight;
 	}//end constructor
 	
+	public RoadBike(Bike bike, int tyreWidth, int postHeight) {
+		super(bike.getHandleBars(), bike.getFrame(), bike.getTyres(), bike.getSeatType(), bike.getNumGears());
+		this.tyreWidth = tyreWidth;
+		this.postHeight = postHeight;
+	}
+	
 	public void printDescription()
 	{
 		super.printDescription();
@@ -45,4 +51,10 @@ public final class RoadBike extends Bike implements RoadParts{
 	public void setPostHeight(int newValue) {
 		this.postHeight = newValue;
 	}//end method 
+	
+	public void showBikeParts() {
+		super.showBikeParts();
+		System.out.println("\t[6] Tyre Width - "+this.tyreWidth);
+		System.out.println("\t[7] Post Height - "+this.postHeight);
+	}
 }//end class RoadBike

@@ -24,6 +24,7 @@ public class BikeDriver {
 //		bike1.printDescription();
 		
 		ArrayList<Bike> bikes = new ArrayList<Bike>();
+		bikes.add(new RoadBike("drop", "tourer", "semi-grip", "comfort", 14, 25, 18));
 		
 		//	UI
 		String command;
@@ -33,11 +34,12 @@ public class BikeDriver {
 				System.out.println("List of Valid Commands");
 				System.out.println("\t[1] Create Bike Object");
 				System.out.println("\t[2] See Description of all Bikes");
+				System.out.println("\t[3] Edit Bike");
 				System.out.println("\t[0] Exit"); // Should I add delete command?
 				System.out.print("Enter Command: ");
 				
 				command = in.nextLine();
-				isValidCommand = !(command.equals("1") || command.equals("2") || command.equals("0"));
+				isValidCommand = !(command.equals("1") || command.equals("2") || command.equals("3") || command.equals("0"));
 				
 				if(isValidCommand) {
 					System.out.println("\nInvalid Command\n");
@@ -49,6 +51,7 @@ public class BikeDriver {
 			switch(command) {
 				case "1": createBikeObj(bikes); break;
 				case "2": seeBikeDesc(bikes); break;
+				case "3": editBike(bikes); break;
 			}
 			
 		}while(!command.equals("0"));
@@ -81,20 +84,17 @@ public class BikeDriver {
 			
 			case "1": 
 				bikes.add(createBike());
-				System.out.println("Successfully Created");
 				break;
 			case "2":
-				Bike temp1 = createBike();
 				// Create Road Bike
-				bikes.add(createMountainBike(temp1));
+				bikes.add(createMountainBike(createBike()));
 				break;
 			case "3":
-				Bike temp2 = createBike();
 				// Create Mountain Bike
-				bikes.add(createRoadBike(temp2));
+				bikes.add(createRoadBike(createBike()));
 				break;
 		}
-		
+		System.out.println("Successfully Created");
 	}
 	
 	private static Bike createBike() {
@@ -133,7 +133,7 @@ public class BikeDriver {
 		return new Bike(handleBars, frame, tyres, seatType, numGears);
 	}
 	
-	private static Bike createRoadBike(Bike temp) {
+	private static RoadBike createRoadBike(Bike temp) {
 		
 		boolean validInput;
 		
@@ -172,11 +172,10 @@ public class BikeDriver {
 			
 		}while(!validInput);
 		
-		return new RoadBike(temp.getHandleBars(), temp.getFrame(), temp.getTyres(), temp.getSeatType(),
-				temp.getNumGears(), tyreWidth, postHeight);
+		return new RoadBike(temp, tyreWidth, postHeight);
 	}
 	
-	private static Bike createMountainBike(Bike temp) {
+	private static MountainBike createMountainBike(Bike temp) {
 		
 		System.out.println("Enter Suspension: ");
 		String suspension = in.nextLine();
@@ -202,11 +201,15 @@ public class BikeDriver {
 			
 		}while(!validInput);
 		
-		return new MountainBike(temp.getHandleBars(), temp.getFrame(), temp.getTyres(), temp.getSeatType(),
-				temp.getNumGears(), suspension, type, frameSize);
+		return new MountainBike(temp, suspension, type, frameSize);
 	}
 	
 	private static void seeBikeDesc(ArrayList<Bike> bikes) {
+		
+		if(bikes.isEmpty()) {
+			System.out.println("There's no Bike to see.");
+			return;
+		}
 		
 		//	Traverse the Bike List
 		for(Bike bike: bikes) {
@@ -214,5 +217,94 @@ public class BikeDriver {
 			System.out.println();
 		}
 	}
-
+	
+	private static void editBike(ArrayList<Bike> bikes) {
+		
+		if(bikes.isEmpty()) {
+			System.out.println("There's no Bike to edit.");
+			return;
+		}
+		
+		//	Reusable variables
+		int index = 0;
+		boolean validIndex;
+		
+		//	Display all Bikes
+		System.out.println("\nList of all Bikes");
+		for(int i = 0; i < bikes.size(); i++) {
+			System.out.print("\n["+i+"] ");
+			bikes.get(i).printDescription();
+			System.out.println();
+		}
+		System.out.println();
+		
+		//	Choose Bike to edit
+		do {
+			validIndex = true;
+			try {
+				System.out.print("Enter Bike to edit: ");
+				index = in.nextInt();
+			}
+			catch(Exception e) {
+				System.out.println("Invalid Index");
+				validIndex = false;
+			}
+			finally {
+				in.nextLine();
+				if(index < 0 || index >= bikes.size()) {
+					System.out.println("Out of Range Index");
+					validIndex = false;
+				}
+			}
+		}while(!validIndex);
+		
+		do {
+			//	Show parts of chosen bike
+			Bike bikeToEdit = bikes.get(index);
+			bikeToEdit.showBikeParts();
+			
+			//	Edit bike part
+			do {
+				validIndex = true;
+				try {
+					index = in.nextInt();
+				}
+				catch(Exception e) {
+					System.out.println("Invalid Input");
+					validIndex = false;
+				}
+				
+//				if(bikeToEdit instanceof RoadBike && validIndex) {
+//					if(index < 0 || index > 7) {
+//						System.out.println("Out of Range");
+//						validIndex = false;
+//					}
+//					else {
+//						
+//					}
+//				}
+//				else if(bikeToEdit instanceof MountainBike && validIndex){
+//					if(index < 0 || index > 8) {
+//						System.out.println("Out of Range");
+//						validIndex = false;
+//					}
+//					else {
+//						
+//					}
+//				}
+//				else if (validIndex) {
+//					if(index < 0 || index > 5) {
+//						System.out.println("Out of Range");
+//						validIndex = false;
+//					}
+//					else {
+//						
+//					}
+//				}
+			}while(!validIndex);
+		}while(index != 0);
+		
+		System.out.println("Done Replacing Parts");
+	}
+	
 }

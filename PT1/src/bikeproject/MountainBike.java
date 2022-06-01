@@ -18,6 +18,13 @@ public final class MountainBike extends Bike implements MountainParts{
 		this.frameSize = frameSize;
 	}//end constructor
     
+    public MountainBike(Bike bike, String suspension, String type, int frameSize) {
+    	super(bike.getHandleBars(), bike.getFrame(), bike.getTyres(), bike.getSeatType(), bike.getNumGears());
+    	this.suspension = suspension;
+		this.type = type;
+		this.frameSize = frameSize;
+    }
+    
 	public void printDescription()
 	{
 		super.printDescription();
@@ -44,4 +51,11 @@ public final class MountainBike extends Bike implements MountainParts{
 	public void setType(String newValue) {
 		this.type = newValue;
 	}//end method setType
+	
+	public void showBikeParts() {
+		super.showBikeParts();
+		System.out.println("\t[6] Suspension - "+this.suspension);
+		System.out.println("\t[7] Type - "+this.type);
+		System.out.println("\t[8] Frame Size - "+this.frameSize);
+	}
 }//end class MountainBike

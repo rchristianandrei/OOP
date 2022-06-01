@@ -64,5 +64,15 @@ public class Bike implements BikeParts{
 	public int getNumGears() {
 		return this.NumGears;
 	}
+	
+	public void showBikeParts() {
+		
+		System.out.println("Choose Part to edit");
+		System.out.println("\t[1] Handle Bars - "+this.handleBars);
+		System.out.println("\t[2] Frame - "+this.frame);
+		System.out.println("\t[3] Tyres - "+this.tyres);
+		System.out.println("\t[4] Seat Type - "+this.seatType);
+		System.out.println("\t[5] No. of Gears - "+this.NumGears);
+	}
 
 }//end class Bike

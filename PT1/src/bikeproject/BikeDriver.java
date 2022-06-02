@@ -36,7 +36,7 @@ public class BikeDriver {
 				System.out.println("\t[2] See Description of all Bikes");
 				System.out.println("\t[3] Edit Bike");
 				System.out.println("\t[4] Delete Bike");
-				System.out.println("\t[0] Exit"); // Should I add delete command?
+				System.out.println("\t[0] Exit");
 				System.out.print("Enter Command: ");
 				
 				command = inputInt();

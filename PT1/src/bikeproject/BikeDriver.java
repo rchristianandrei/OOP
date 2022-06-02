@@ -27,7 +27,7 @@ public class BikeDriver {
 		bikes.add(new RoadBike("drop", "tourer", "semi-grip", "comfort", 14, 25, 18));
 		
 		//	UI
-		String command;
+		int command;
 		boolean isValidCommand;
 		do {//	Main Loop
 			do {//	Command Loop
@@ -35,26 +35,28 @@ public class BikeDriver {
 				System.out.println("\t[1] Create Bike Object");
 				System.out.println("\t[2] See Description of all Bikes");
 				System.out.println("\t[3] Edit Bike");
+				System.out.println("\t[4] Delete Bike");
 				System.out.println("\t[0] Exit"); // Should I add delete command?
 				System.out.print("Enter Command: ");
 				
-				command = in.nextLine();
-				isValidCommand = !(command.equals("1") || command.equals("2") || command.equals("3") || command.equals("0"));
+				command = inputInt();
+				isValidCommand = command >= 0 && command <= 4;
 				
-				if(isValidCommand) {
+				if(!isValidCommand) {
 					System.out.println("\nInvalid Command\n");
 				}
 				
-			}while(isValidCommand);
+			}while(!isValidCommand);
 			
 			//	Executing Command
 			switch(command) {
-				case "1": createBikeObj(bikes); break;
-				case "2": seeBikeDesc(bikes); break;
-				case "3": editBike(bikes); break;
+				case 1: createBikeObj(bikes); break;
+				case 2: seeBikeDesc(bikes); break;
+				case 3: editBike(bikes); break;
+				case 4: deleteBike(bikes); break;
 			}
 			
-		}while(!command.equals("0"));
+		}while(!(command == 0));
 		
 		System.out.println("Bye Bye!");
 		in.close();
@@ -146,10 +148,13 @@ public class BikeDriver {
 		}
 		
 		//	Traverse the Bike List
-		for(Bike bike: bikes) {
-			bike.printDescription();
+		System.out.println("\nList of all Bikes");
+		for(int i = 0; i < bikes.size(); i++) {
+			System.out.print("\n["+i+"] ");
+			bikes.get(i).printDescription();
 			System.out.println();
 		}
+		System.out.println();
 	}
 	
 	private static void editBike(ArrayList<Bike> bikes) {
@@ -164,13 +169,7 @@ public class BikeDriver {
 		boolean validIndex;
 		
 		//	Display all Bikes
-		System.out.println("\nList of all Bikes");
-		for(int i = 0; i < bikes.size(); i++) {
-			System.out.print("\n["+i+"] ");
-			bikes.get(i).printDescription();
-			System.out.println();
-		}
-		System.out.println();
+		seeBikeDesc(bikes);
 		
 		//	Choose Bike to edit
 		do {
@@ -284,6 +283,21 @@ public class BikeDriver {
 				bike.setFrameSize(inputInt("Enter new Frame Size: "));
 				break;
 		}
+	}
+	
+	private static void deleteBike(ArrayList<Bike> bikes) {
+		
+		//	Show all bikes
+		seeBikeDesc(bikes);
+		
+		//	Choose Bike to delete
+		int index = 0;
+		do {
+			index = inputInt("Enter index of Bike to delete: ");
+		}while(index < 0 || index >= bikes.size());
+		
+		bikes.remove(index);
+		System.out.println("Bike Deleted!");
 	}
 	
 	private static int inputInt(String prompt) {

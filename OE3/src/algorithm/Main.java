@@ -61,7 +61,7 @@ public class Main {
 				numbers.remove(binarySearch(target));
 			}
 			catch(IndexOutOfBoundsException e) {
-				System.out.println("Invalid index, 0 to "+(numbers.size()-1)+" only!");
+				System.out.println("Number not found!");
 			}
 		}
 		else {

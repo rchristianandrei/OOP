@@ -3,9 +3,6 @@ package bikeproject;
 import java.util.ArrayList;
 
 public class BikeList {
-
-	
-	
 	
 	public static void main(String[] args) {
 		

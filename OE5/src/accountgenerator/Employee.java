@@ -28,7 +28,7 @@ public class Employee {
 	}
 	
 	private String setEmail() {
-		return this.username + "@oracleacademy.Test";
+		return this.username.replace(".", "") + "@oracleacademy.Test";
 	}
 	
 	private String setInitialPassword() {

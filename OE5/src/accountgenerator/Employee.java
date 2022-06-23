@@ -75,12 +75,9 @@ public class Employee {
 		Matcher hasSc = containSc.matcher(password);
 		Matcher hasValidLength = stringMinLength.matcher(password);
 		
-		if(hasSmallLetter.find() && hasBigLetter.find() && hasNum.find() && hasSc.find() && hasValidLength.find()) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return hasSmallLetter.find() && hasBigLetter.find() && hasNum.find()
+				&& hasSc.find() && hasValidLength.find();
+
 	}
 	
 	String getPassword() {

@@ -1,10 +1,18 @@
 package accountgenerator;
 
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Employee {
 	
 	private static Scanner in = new Scanner(System.in);
+	
+	private static Pattern containaz = Pattern.compile(".*([a-z]+).*", Pattern.CASE_INSENSITIVE);
+	private static Pattern containAZ = Pattern.compile(".*([A-Z]+).*", Pattern.CASE_INSENSITIVE);
+	private static Pattern containNum = Pattern.compile(".*([0-9]+).*");
+	private static Pattern containSc = Pattern.compile("[!@#$%^&*()_+=|<>?{}\\\\[\\\\]~-]");
+	private static Pattern stringMinLength = Pattern.compile(".{8}");
 	
 	private final String name;
 	private final String username;
@@ -15,7 +23,7 @@ public class Employee {
 		this.name = setName();
 		this.username = setUsername();
 		this.email = setEmail();
-		this.password = setInitialPassword();
+		setPassword();
 	}
 	
 	private String setName() {
@@ -28,7 +36,20 @@ public class Employee {
 	}
 	
 	private String setEmail() {
-		return this.username.replace(".", "") + "@oracleacademy.Test";
+		String[] names = this.name.toLowerCase().split(" ");
+		
+		String email = "";
+		
+		for(int i = 0; i < names.length; i++) {
+			if(i == 0) {
+				email += names[i].charAt(0);
+			}
+			else {
+				email += names[i];
+			}
+		}
+		
+		return email + "@oracleacademy.Test";
 	}
 	
 	private String setInitialPassword() {
@@ -37,7 +58,29 @@ public class Employee {
 	}
 	
 	void setPassword() {
-		this.password = setInitialPassword();
+		
+		String temp = "";
+		do{
+			temp = setInitialPassword();
+		}while(!isValidPassword(temp));
+		
+		this.password = temp;
+	}
+	
+	private boolean isValidPassword(String password) {
+		
+		Matcher hasSmallLetter = containaz.matcher(password);
+		Matcher hasBigLetter = containAZ.matcher(password);
+		Matcher hasNum = containNum.matcher(password);
+		Matcher hasSc = containSc.matcher(password);
+		Matcher hasValidLength = stringMinLength.matcher(password);
+		
+		if(hasSmallLetter.find() && hasBigLetter.find() && hasNum.find() && hasSc.find() && hasValidLength.find()) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 	String getPassword() {
@@ -48,10 +91,8 @@ public class Employee {
 		
 		StringBuilder temp = new StringBuilder(this.password);
 		
-		for(int i = 0; i < temp.length(); i++) {
-			if(i%2 != 0) {
+		for(int i = 3; i < temp.length(); i++) {
 				temp.setCharAt(i, '*');;
-			}
 		}
 		
 		return temp.toString();

@@ -8,11 +8,11 @@ public class Employee {
 	
 	private static Scanner in = new Scanner(System.in);
 	
-	private static Pattern containaz = Pattern.compile(".*([a-z]+).*", Pattern.CASE_INSENSITIVE);
-	private static Pattern containAZ = Pattern.compile(".*([A-Z]+).*", Pattern.CASE_INSENSITIVE);
-	private static Pattern containNum = Pattern.compile(".*([0-9]+).*");
-	private static Pattern containSc = Pattern.compile("[!@#$%^&*()_+=|<>?{}\\\\[\\\\]~-]");
-	private static Pattern stringMinLength = Pattern.compile(".{8}");
+	private static final Pattern containaz = Pattern.compile(".*([a-z]+).*", Pattern.CASE_INSENSITIVE);
+	private static final Pattern containAZ = Pattern.compile(".*([A-Z]+).*", Pattern.CASE_INSENSITIVE);
+	private static final Pattern containNum = Pattern.compile(".*([0-9]+).*");
+	private static final Pattern containSc = Pattern.compile("[!@#$%^&*()_+=|<>?{}\\\\[\\\\]~-]");
+	private static final Pattern stringMinLength = Pattern.compile(".{8}");
 	
 	private final String name;
 	private final String username;

@@ -8,7 +8,7 @@ public class Main {
 	public static void main(String[] args) {
 		
 		do {
-			System.out.println("Currency Converter\n");
+			System.out.println("\nCurrency Converter\n");
 			
 			Money amount = inputMoney("Please input the amount you want to convert and its currency\nExample: 100.00 Peso\nAmount> ");
 			

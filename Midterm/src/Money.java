@@ -16,4 +16,3 @@ public class Money {
 		return currency + " " + df.format(value);
 	}
 }
-

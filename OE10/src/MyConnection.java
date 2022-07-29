@@ -44,6 +44,7 @@ public class MyConnection {
 	static Data getQuery(String query) {
 		
 		try {
+			
 			Class.forName(driver);
 			
 			try {
@@ -57,35 +58,48 @@ public class MyConnection {
 				ArrayList<ArrayList<Object>> entries = new ArrayList<>();
 				
 				for(int i = 1; i <= md.getColumnCount(); i++) {
+					
 					cols.add(md.getColumnName(i));
 				}
 				
 				String[] newCols = new String[cols.size()];
 				
 				for(int i = 0; i < newCols.length; i++) {
+					
 					newCols[i] = cols.get(i);
 				}
 				
 				if(colNum > 0) {
+					
 					while(rs.next()) {
+						
 						ArrayList<Object> temp = new ArrayList<>();
+						
 						for(int i = 0; i < colNum; i++) {
+							
 							temp.add(rs.getString(i+1));
 						}
+						
 						entries.add(temp);
 					}
 				}
 				
 				if(entries.size() <= 0){
+					
 					return new Data(null, null);
 				}
+				
 				Object[][] newEntries = new Object[entries.size()][entries.get(0).size()];
 				
 				for(int i = 0; i < entries.size(); i++) {
+					
 					Object[] temp = new Object[entries.get(0).size()];
+					
 					for(int j = 0; j < temp.length; j++) {
+						
 						temp[j] = entries.get(i).get(j);
 					}
+					
 					newEntries[i] = temp;
 				}
 				
@@ -122,19 +136,22 @@ public class MyConnection {
 	static void addQuery(String query) {
 		
 		try {
+			
 			Class.forName(driver);
 			
 			try {
+				
 				Connection con = DriverManager.getConnection(url, user, password);
 				Statement st = con.createStatement();
 				st.execute(query);
-				
 			}
 			catch(SQLException e) {
+				
 				System.out.println(e.getMessage());
 			}
 		}
 		catch(ClassNotFoundException e) {
+			
 			System.out.println(e.getMessage());
 		}
 	}

@@ -20,9 +20,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
 
-public class MainProgram implements ActionListener{
+public class MainProgram{
 	
 	private final String studentIDRegex = "[0-9]{4}-[0-9]{5}";
+	private final String defQuery = "select * from student;";
 	
 	private JFrame frame;
 	private JButton logout;
@@ -44,7 +45,7 @@ public class MainProgram implements ActionListener{
 	MainProgram(){
 		
 		frame = new JFrame();
-		frame.setTitle("OE9 by Andrei");
+		frame.setTitle("OE10 by Andrei");
 		frame.setSize(1000, 700);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
@@ -75,7 +76,6 @@ public class MainProgram implements ActionListener{
 		JLabel user = new JLabel(Account.username+" ");
 		user.setFont(Settings.headerFont);
 		user.setHorizontalAlignment(JLabel.RIGHT);
-		//user.setBorder(BorderFactory.createLineBorder(Color.black));
 		user.setForeground(Settings.headerFGColor);
 		user.setBounds(0, 0, 220, 80);
 		userPanel.add(user);
@@ -86,7 +86,10 @@ public class MainProgram implements ActionListener{
 		this.logout.setFocusable(false);
 		this.logout.setBackground(userPanel.getBackground());
 		this.logout.setBorder(null);
-		this.logout.addActionListener(this);
+		this.logout.addActionListener(e -> {
+			
+			logout();
+		});
 		userPanel.add(this.logout);
 		
 		header.add(title, BorderLayout.WEST);
@@ -198,10 +201,43 @@ public class MainProgram implements ActionListener{
 		clear.setIcon(new ImageIcon("images/eraser.png"));
 		exit.setIcon(new ImageIcon("images/exit.png"));
 		
+		add.addActionListener(e -> {
+			
+			add();
+			getInfo(defQuery);
+		});
+		
+		remove.addActionListener(e -> {
+			
+			remove();
+			getInfo(defQuery);
+		});
+		
+		search.addActionListener(e -> {
+			
+			search();
+			getInfo(defQuery);
+		});
+		
+		edit.addActionListener(e -> {
+			
+			edit();
+			getInfo(defQuery);
+		});
+		
+		clear.addActionListener(e -> {
+			
+			clear();
+		});
+		
+		exit.addActionListener(e -> {
+			
+			exit();
+		});
+		
 		for(JButton button : buttons) {
 			
 			button.setFocusable(false);
-			button.addActionListener(this);
 			button.setBackground(Color.white);
 		}
 		
@@ -215,172 +251,21 @@ public class MainProgram implements ActionListener{
 		results.setBounds(525, 25, 400, 500);
 		body.add(results);
 		
-		update("select * from student");
+		getInfo(defQuery);
 		
 		//	------End of Results
 		
 		this.frame.add(body, BorderLayout.CENTER);
 	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-
-		if(e.getSource() == logout) {
-			
-			new Login();
-			
-			Account.username = null;
-			Account.password = null;
-			
-			frame.dispose();
-		}
-		else if(e.getSource() == add) {
-			
-			add();
-			update("select * from student;");
-		}
-		else if(e.getSource() == remove) {
-			
-			remove();
-			update("Select * from student;");
-		}
-		else if(e.getSource() == search) {
-			
-			search();
-		}
-		else if(e.getSource() == edit) {
-			
-			edit();
-			update("Select * from student;");
-		}
-		else if(e.getSource() == clear) {
-			
-			inputID.setText("");
-			inputName.setText("");
-			inputAdd.setText("");
-		}
-		else if(e.getSource() == exit) {
-			
-			frame.dispose();
-		}
-		
-	}
 	
-	private void remove() {
+	private void logout() {
 		
-		//	Get input
-		String id = inputID.getText();
-		String query = "delete from student where student_id = '" + id + "';";
+		new Login();
 		
-		//	Check if ID is Valid
-		if(!id.matches(studentIDRegex)) {
-			
-			JOptionPane.showMessageDialog(frame, "Invalid ID", "Warning", JOptionPane.WARNING_MESSAGE);
-			return;
-		}
+		Account.username = null;
+		Account.password = null;
 		
-		MyConnection.addQuery(query);
-	}
-	
-	private void edit() {
-		
-		//	Get input
-		String id = inputID.getText();
-		String name = inputName.getText();
-		String address = inputAdd.getText();
-		
-		//	Check if ID is Valid
-		if(!id.matches(studentIDRegex)) {
-			
-			JOptionPane.showMessageDialog(frame, "Invalid ID", "Warning", JOptionPane.WARNING_MESSAGE);
-			return;
-		}
-		
-		//	Check if Name or Address is Blank
-		boolean nameIsEmpty = name.length() <= 0;
-		boolean addIsEmpty = address.length() <= 0;
-		
-		if(!nameIsEmpty || !addIsEmpty) {
-			
-			String query = "update student set ";
-			boolean isEdited = false;
-			
-			if (!nameIsEmpty) {
-				
-				query += "student_name = '" + name + "'";
-				isEdited = true;
-			}
-			
-			if(!addIsEmpty) {
-				
-				if(isEdited) {
-					
-					query += ", address = '" + address + "' ";
-				}
-				else {
-					
-					query += " address = '" + address + "' ";
-				}
-			}
-			
-			query+= "where student_id = '" + id + "';";
-			
-			MyConnection.addQuery(query);
-		}
-		else {
-			
-			JOptionPane.showMessageDialog(this.frame, "Invalid Blank Field", "Warning", JOptionPane.WARNING_MESSAGE);
-			return;
-		}
-	}
-	
-	private void update(String query) {
-		
-		if(dataTable != null) {
-			results.remove(dataTable);
-		}
-		
-		Data data = MyConnection.getQuery(query);
-		
-		if(data.getEntries() == null) {
-			return;
-		}
-		
-		JTable temp = new JTable(data.getEntries(), data.getColumns()) {
-			
-			public boolean isCellEditable(int x, int y) {
-				
-				return false;
-			}
-			
-			public Component prepareRenderer(TableCellRenderer r, int data, int column) {
-				
-				Component c = super.prepareRenderer(r, data, column);
-				
-				try {
-					
-					int row = getSelectedRow();
-					
-					inputID.setText(getModel().getValueAt(row, 0).toString());
-					inputName.setText(getModel().getValueAt(row, 1).toString());
-					inputAdd.setText(getModel().getValueAt(row, 2).toString());
-				}
-				catch(Exception e) {
-					
-					System.out.println(e.getMessage());
-				}
-				
-				return c;
-			}
-		};
-		temp.setPreferredScrollableViewportSize(new Dimension(380, 460));
-		temp.setFillsViewportHeight(true);
-		
-		dataTable = new JScrollPane(temp);
-		
-		results.add(dataTable, BorderLayout.CENTER);
-		results.setVisible(false);
-		results.setVisible(true);
+		frame.dispose();
 	}
 	
 	private void add() {
@@ -389,20 +274,85 @@ public class MainProgram implements ActionListener{
 		String name = inputName.getText();
 		String address = inputAdd.getText();
 		
-		if(id.matches(studentIDRegex) && name.length() > 0 && address.length() > 0) {
-			String statement = "insert into student(student_id, student_name, address) values('"+id+"', '"+name+"', '"+address+"');";
-			MyConnection.addQuery(
-					statement
-			);
+		if(!id.matches("[0-9]{4}-[0-9]{5}")) {
+			
+			message("Invalid ID", "Warning");
+			return;
 		}
-		else {
-			JOptionPane.showMessageDialog(
-					this.frame, 
-					"Invalid Input", 
-					"Warning", 
-					JOptionPane.WARNING_MESSAGE
-			);
+		
+		if(name.length() <= 0 && address.length() <= 0) {
+			
+			message("Blank Field", "Warning");
+			return;
 		}
+		
+		String statement = "insert into student (student_id, student_name, address) values ('"+id+"', '"+name+"', '"+address+"');";
+		
+		MyConnection.addQuery(statement);
+		getInfo(defQuery);
+	}
+
+	private void remove() {
+		
+		String id = inputID.getText();
+		String query = "delete from student where student_id = '" + id + "';";
+		
+		if(!id.matches(studentIDRegex)) {
+			
+			message("Invalid ID", "Warning");
+			return;
+		}
+		
+		MyConnection.addQuery(query);
+		getInfo(defQuery);
+	}
+	
+	private void edit() {
+		
+		String id = inputID.getText();
+		String name = inputName.getText();
+		String address = inputAdd.getText();
+		
+		if(!id.matches(studentIDRegex)) {
+			
+			message("Invalid ID", "Warning");
+			return;
+		}
+		
+		boolean nameIsEmpty = name.length() <= 0;
+		boolean addIsEmpty = address.length() <= 0;
+		
+		if(nameIsEmpty && addIsEmpty) {
+			
+			message("Blank Field", "Notice");
+			return;
+		}
+		
+		String query = "update student set ";
+		boolean isEdited = false;
+		
+		if (!nameIsEmpty) {
+			
+			query += "student_name = '" + name + "'";
+			isEdited = true;
+		}
+		
+		if(!addIsEmpty) {
+			
+			if(isEdited) {
+				
+				query += ", address = '" + address + "' ";
+			}
+			else {
+				
+				query += " address = '" + address + "' ";
+			}
+		}
+		
+		query+= "where student_id = '" + id + "';";
+		
+		MyConnection.addQuery(query);
+		getInfo(defQuery);
 	}
 	
 	private void search() {
@@ -438,8 +388,72 @@ public class MainProgram implements ActionListener{
 			}
 		}
 		
-		update(query);
+		getInfo(query);
+	}
+	
+	private void clear() {
+		
+		inputID.setText(null);
+		inputName.setText(null);
+		inputAdd.setText(null);
+	}
+	
+	private void exit() {
+		
+		frame.dispose();
+	}
+	
+	private void getInfo(String query) {
+		
+		if(dataTable != null) {
+			results.remove(dataTable);
+		}
+		
+		Data data = MyConnection.getQuery(defQuery);
+		
+		if(data.getEntries() == null) {
+			
+			return;
+		}
+		
+		JTable temp = new JTable(data.getEntries(), data.getColumns()) {
+			
+			public boolean isCellEditable(int x, int y) {
+				
+				return false;
+			}
+			
+			public Component prepareRenderer(TableCellRenderer r, int data, int column) {
+				
+				Component c = super.prepareRenderer(r, data, column);
+				
+				try {
+					
+					int row = getSelectedRow();
+					
+					inputID.setText(getModel().getValueAt(row, 0).toString());
+					inputName.setText(getModel().getValueAt(row, 1).toString());
+					inputAdd.setText(getModel().getValueAt(row, 2).toString());
+				}
+				catch(Exception e) {
+					
+				}
+				
+				return c;
+			}	
+		};
+		temp.setPreferredScrollableViewportSize(new Dimension(380, 460));
+		temp.setFillsViewportHeight(true);
+		
+		dataTable = new JScrollPane(temp);
+		
+		results.add(dataTable, BorderLayout.CENTER);
 		results.setVisible(false);
 		results.setVisible(true);
+	}
+	
+	private void message(String mssg, String title) {
+		
+		JOptionPane.showMessageDialog(frame, mssg, title, JOptionPane.WARNING_MESSAGE);
 	}
 }

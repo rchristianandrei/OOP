@@ -216,7 +216,6 @@ public class MainProgram{
 		search.addActionListener(e -> {
 			
 			search();
-			getInfo(defQuery);
 		});
 		
 		edit.addActionListener(e -> {
@@ -288,7 +287,7 @@ public class MainProgram{
 		
 		String statement = "insert into student (student_id, student_name, address) values ('"+id+"', '"+name+"', '"+address+"');";
 		
-		MyConnection.addQuery(statement);
+		MyConnection.addQuery(statement, frame);
 		getInfo(defQuery);
 	}
 
@@ -303,7 +302,7 @@ public class MainProgram{
 			return;
 		}
 		
-		MyConnection.addQuery(query);
+		MyConnection.addQuery(query, frame);
 		getInfo(defQuery);
 	}
 	
@@ -351,7 +350,7 @@ public class MainProgram{
 		
 		query+= "where student_id = '" + id + "';";
 		
-		MyConnection.addQuery(query);
+		MyConnection.addQuery(query, frame);
 		getInfo(defQuery);
 	}
 	
@@ -361,34 +360,33 @@ public class MainProgram{
 		boolean hasCons = false;
 		
 		if(!inputID.getText().isEmpty()) {
-			if(!inputID.getText().matches(studentIDRegex)) {
-				JOptionPane.showMessageDialog(frame, "Invalid ID", "Warning", JOptionPane.WARNING_MESSAGE);
-				return;
-			}
-			query = query.substring(0, query.length()-1) + " where student_id = '"+inputID.getText()+"';";
+			
+			query = query.substring(0, query.length()-1) + " where student_id like '%"+inputID.getText()+"%';";
 			hasCons = true;
 		}
 		
 		if(!inputName.getText().isEmpty()) {
 			if(hasCons) {
-				query = query.substring(0, query.length()-1) + " and student_name = '"+inputName.getText()+"';";
+				query = query.substring(0, query.length()-1) + " or student_name like '%"+inputName.getText()+"%';";
 			}
 			else {
-				query = query.substring(0, query.length()-1) + " where student_name = '"+inputName.getText()+"';";
+				query = query.substring(0, query.length()-1) + " where student_name like '%"+inputName.getText()+"%';";
 				hasCons = true;
 			}
 		}
 		
 		if(!inputAdd.getText().isEmpty()) {
 			if(hasCons) {
-				query = query.substring(0, query.length()-1) + " and address = '"+inputAdd.getText()+"';";
+				query = query.substring(0, query.length()-1) + " or address like '%"+inputAdd.getText()+"%';";
 			}
 			else {
-				query = query.substring(0, query.length()-1) + " where address = '"+inputAdd.getText()+"';";
+				query = query.substring(0, query.length()-1) + " where address like '%"+inputAdd.getText()+"%';";
 			}
 		}
 		
 		getInfo(query);
+		results.setVisible(false);
+		results.setVisible(true);
 	}
 	
 	private void clear() {
@@ -406,10 +404,13 @@ public class MainProgram{
 	private void getInfo(String query) {
 		
 		if(dataTable != null) {
+			
 			results.remove(dataTable);
+			results.setVisible(false);
+			results.setVisible(true);
 		}
 		
-		Data data = MyConnection.getQuery(defQuery);
+		Data data = MyConnection.getQuery(query, frame);
 		
 		if(data.getEntries() == null) {
 			
@@ -448,8 +449,6 @@ public class MainProgram{
 		dataTable = new JScrollPane(temp);
 		
 		results.add(dataTable, BorderLayout.CENTER);
-		results.setVisible(false);
-		results.setVisible(true);
 	}
 	
 	private void message(String mssg, String title) {

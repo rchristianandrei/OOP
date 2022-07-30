@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class MyConnection {
 	
@@ -41,7 +42,7 @@ public class MyConnection {
 
 	}
 	
-	static Data getQuery(String query) {
+	static Data getQuery(String query, JFrame frame) {
 		
 		try {
 			
@@ -86,6 +87,7 @@ public class MyConnection {
 				
 				if(entries.size() <= 0){
 					
+					message("Empty Data", frame);
 					return new Data(null, null);
 				}
 				
@@ -108,13 +110,16 @@ public class MyConnection {
 				return new Data(newCols, newEntries);
 			}
 			catch(SQLException e) {
-				System.out.println(e.getMessage());
+				
+				message(e.getMessage(), frame);
 			}
 		}
 		catch(ClassNotFoundException e) {
-			System.out.println(e.getMessage());
+			
+			message(e.getMessage(), frame);
 		}
 		
+		message("Empty Data", frame);
 		return new Data(null, null);
 	}
 	
@@ -133,7 +138,7 @@ public class MyConnection {
 		return numberOfColumns;
 	}
 	
-	static void addQuery(String query) {
+	static void addQuery(String query, JFrame frame) {
 		
 		try {
 			
@@ -147,12 +152,17 @@ public class MyConnection {
 			}
 			catch(SQLException e) {
 				
-				System.out.println(e.getMessage());
+				message(e.getMessage(), frame);
 			}
 		}
 		catch(ClassNotFoundException e) {
 			
-			System.out.println(e.getMessage());
+			message(e.getMessage(), frame);
 		}
+	}
+	
+	static private void message(String mssg, JFrame frame) {
+		
+		JOptionPane.showMessageDialog(frame, mssg, "Connection", JOptionPane.WARNING_MESSAGE);
 	}
 }
